@@ -6,7 +6,7 @@
 
 [ダウンロードはこちら．](https://github.com/sigma-axis/aviutl2_script_PixelSnap_S/releases) \[紹介動画準備中．\]
 
-TODO: images.
+<img width="1920" height="1080" alt="半ピクセルずれを矯正" src="https://github.com/user-attachments/assets/ad69353b-659e-40ba-b610-96c42f4fef45" />
 
 ##  動作要件
 
@@ -87,7 +87,7 @@ TODO: images.
 
 ## 改版履歴
 
-- **v1.00 (for beta13)** (2025-09-??)
+- **v1.00 (for beta13)** (2025-09-27)
 
   - 初版．
 
