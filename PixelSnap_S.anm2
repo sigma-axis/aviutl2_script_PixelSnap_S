@@ -1,0 +1,55 @@
+--[[
+MIT License
+Copyright (c) 2025 sigma-axis
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+https://mit-license.org/
+]]
+
+--information: PixelSnap_S v1.00 (for beta12) by σ軸
+--label:配置
+local obj, math = obj, math;
+local cx0, cy0 = obj.cx + obj.getvalue("cx") + obj.w / 2, obj.cy + obj.getvalue("cy") + obj.h / 2;
+local cx, cy = math.floor(0.5 + cx0 + cy0), math.floor(0.5 + cx0 - cy0);
+cx, cy = (cx + cy) / 2, (cx - cy) / 2;
+
+local zoom, aspect, rx, ry, rz =
+	obj.zoom * obj.getvalue("zoom") / 100, obj.getvalue("aspect"),
+	math.pi / 180 * (obj.rx + obj.getvalue("rx")),
+	math.pi / 180 * (obj.ry + obj.getvalue("ry")),
+	math.pi / 180 * (obj.rz + obj.getvalue("rz"));
+local c_x, s_x, c_y, s_y, c_z, s_z =
+	math.cos(rx), math.sin(rx), math.cos(ry), math.sin(ry), math.cos(rz), math.sin(rz);
+local dx, dy, dz = cx - cx0, cy - cy0, 0;
+dx, dy, dz =
+	dx * zoom * math.min(1 - obj.aspect, 1) * math.min(1 - aspect, 1),
+	dy * zoom * math.min(1 + obj.aspect, 1) * math.min(1 + aspect, 1),
+	dz * zoom;
+dx, dy = c_z * dx - s_z * dy, s_z * dx + c_z * dy;
+dz, dx = c_y * dz - s_y * dx, s_y * dz + c_y * dx;
+dy, dz = c_x * dy - s_x * dz, s_x * dy + c_x * dz;
+
+local x0, y0 = obj.x + obj.ox + obj.screen_w / 2, obj.y + obj.oy + obj.screen_h / 2;
+local x, y, frac = x0 + dx, y0 + dy, cx % 1;
+x, y =
+	math.floor(0.5 + x - frac) + frac,
+	math.floor(0.5 + y - frac) + frac;
+obj.ox, obj.oy = obj.ox + (x - x0), obj.oy + (y - y0);
+obj.cx, obj.cy = obj.cx + (cx - cx0), obj.cy + (cy - cy0);
