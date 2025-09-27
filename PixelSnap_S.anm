@@ -23,8 +23,13 @@ SOFTWARE.
 https://mit-license.org/
 ]]
 
+--
+-- VERSION: v1.02
+--
+
 local obj, math = obj, math;
-local cx0, cy0 = obj.cx + obj.w / 2, obj.cy + obj.h / 2;
+local w, h = obj.getpixel();
+local cx0, cy0 = obj.cx + w / 2, obj.cy + h / 2;
 local cx, cy = math.floor(0.5 + cx0 + cy0), math.floor(0.5 + cx0 - cy0);
 cx, cy = (cx + cy) / 2, (cx - cy) / 2;
 
