@@ -30,9 +30,9 @@ cx, cy = (cx + cy) / 2, (cx - cy) / 2;
 
 local zoom, aspect, rx, ry, rz =
 	obj.zoom * obj.getvalue("zoom") / 100, obj.getvalue("aspect"),
-	math.pi / 180 * (obj.rx + obj.getvalue("rx")),
-	math.pi / 180 * (obj.ry + obj.getvalue("ry")),
-	math.pi / 180 * (obj.rz + obj.getvalue("rz"));
+	math.pi / 180 * obj.rx,
+	math.pi / 180 * obj.ry,
+	math.pi / 180 * obj.rz;
 local c_x, s_x, c_y, s_y, c_z, s_z =
 	math.cos(rx), math.sin(rx), math.cos(ry), math.sin(ry), math.cos(rz), math.sin(rz);
 local dx, dy, dz = cx - cx0, cy - cy0, 0;

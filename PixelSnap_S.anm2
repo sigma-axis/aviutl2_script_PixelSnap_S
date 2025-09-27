@@ -23,7 +23,7 @@ SOFTWARE.
 https://mit-license.org/
 ]]
 
---information: PixelSnap_S v1.00 (for beta13) by σ軸
+--information: PixelSnap_S v1.01 (for beta13) by σ軸
 --label:配置
 local obj, math = obj, math;
 local cx0, cy0 = obj.cx + obj.getvalue("cx") + obj.w / 2, obj.cy + obj.getvalue("cy") + obj.h / 2;
