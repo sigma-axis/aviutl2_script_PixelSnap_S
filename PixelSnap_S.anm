@@ -24,7 +24,7 @@ https://mit-license.org/
 ]]
 
 --
--- VERSION: v1.02
+-- VERSION: v1.03
 --
 
 local obj, math = obj, math;
@@ -49,7 +49,9 @@ dx, dy = c_z * dx - s_z * dy, s_z * dx + c_z * dy;
 dz, dx = c_y * dz - s_y * dx, s_y * dz + c_y * dx;
 dy, dz = c_x * dy - s_x * dz, s_x * dy + c_x * dz;
 
-local x0, y0 = obj.x + obj.ox + obj.screen_w / 2, obj.y + obj.oy + obj.screen_h / 2;
+local x0, y0 =
+	obj.getvalue("x") + obj.ox + obj.screen_w / 2,
+	obj.getvalue("y") + obj.oy + obj.screen_h / 2;
 local x, y, frac = x0 + dx, y0 + dy, cx % 1;
 x, y =
 	math.floor(0.5 + x - frac) + frac,
