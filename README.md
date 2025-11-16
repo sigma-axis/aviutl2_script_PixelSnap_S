@@ -24,7 +24,7 @@
 
   http://spring-fragrance.mints.ne.jp/aviutl
 
-  - `beta13` で動作確認済み．
+  - `beta20` で動作確認済み．
 
 ## 導入方法
 
@@ -66,7 +66,7 @@
 
     ```lua
     --
-    -- VERSION: v1.02
+    -- VERSION: v1.04
     --
     ```
 
@@ -100,6 +100,10 @@
 
 
 ## 改版履歴
+
+- **v1.04 (for beta20)** (2025-11-16)
+
+  - AviUtl ExEdit2 版で，beta20 における拡大率の仕様変更に対応．
 
 - **v1.03 (for beta13)** (2025-09-29)
 
