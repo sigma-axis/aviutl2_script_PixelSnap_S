@@ -30,7 +30,7 @@
 
   http://spring-fragrance.mints.ne.jp/aviutl
 
-  - `beta20` で動作確認済み．
+  - `beta50` で動作確認済み．
 
 ## 導入方法
 
@@ -72,7 +72,7 @@
 
     ```lua
     --
-    -- VERSION: v1.04
+    -- VERSION: v1.05
     --
     ```
 
@@ -86,9 +86,9 @@
 
         遠近法の表現のため，拡大縮小処理がかかります．
 
-    1.  90° の整数倍でないオブジェクトの平面回転 (Z 軸回転) がかかっているとき．
+    1.  オブジェクトに 90° の整数倍でない，または立体的な回転がかかっているとき．
 
-        90° の整数倍の回転なら問題ありません．
+        90° の整数倍の平面回転 (Z 軸回転) なら問題ありません．
 
     1.  グループ制御下に入れているオブジェクトで，そのグループ制御で小数点以下のピクセル数だけズレている場合．
 
@@ -105,7 +105,13 @@
     移動系のアニメーションなどと併用する場合は，このスクリプトの後続に配置したフィルタを使って動かすとスムーズな動きになります．ただしその場合，動きの始点終点などの動きのないタイミングでは，整数単位の移動量を指定するなど通常通りのピクセル単位の配慮が必要です．
 
 
-## 改版履歴
+##  次の改版予定
+
+- **v1.05 (for beta50)** (2026-??-??)
+
+  - コード整理．
+
+##  改版履歴
 
 - **v1.04 (for beta20)** (2025-11-16)
 
@@ -136,7 +142,7 @@
   - 初版．
 
 
-## ライセンス
+##  ライセンス
 
 このプログラムの利用・改変・再頒布等に関しては MIT ライセンスに従うものとします．
 
@@ -144,7 +150,7 @@
 
 The MIT License (MIT)
 
-Copyright (C) 2025 sigma-axis
+Copyright (C) 2025-2026 sigma-axis
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
