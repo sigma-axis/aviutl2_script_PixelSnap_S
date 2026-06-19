@@ -23,7 +23,7 @@ SOFTWARE.
 https://mit-license.org/
 ]]
 
---information: PixelSnap_S v1.05-dev (for beta50) by σ軸
+--information: PixelSnap_S v1.05 (for beta50) by σ軸
 --label:配置
 --require:2004001
 local obj, math = obj, math;
