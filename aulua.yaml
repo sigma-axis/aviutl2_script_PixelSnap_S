@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/karoterra/aviutl2-aulua/refs/heads/main/schema/aulua.schema.json
+project:
+  variables:
+    NAME: PixelSnap_S
+    AUTHOR: σ軸
+    PUBLISH_PAGE: https://github.com/sigma-axis/aviutl2_script_PixelSnap_S
+    LEAST_AVIUTL_VERSION: "2010900"
+    LEAST_AVIUTL_VERSION_STRING: "2.1.9"
+
+package:
+  id: PixelSnap_S
+  name: ピクセル位置合わせスクリプト PixelSnap_S
+  version: v1.10-wip
+  information: "{name} {version} by {AUTHOR}"
+  script_sub_dir: ""
+  uninstall_sub_folder_file: false
+  message:
+    text: |
+      # PixelSnap_S AviUtl ExEdit2 ピクセル位置合わせスクリプト
+
+      画像が半ピクセルだけズレるなどの影響でぼやけてしまうのを防ぐスクリプトです．小数点以下の座標調整をせずともピクセルパーフェクトな描画になってくれます．
+
+      公開ページ:
+      https://github.com/sigma-axis/aviutl2_script_PixelSnap_S
+
+      紹介動画:
+      https://www.nicovideo.jp/watch/sm45452975
+
+      お願い:
+      ニコニコ動画での親作品登録をしていただけると励みになります．
+      作品 ID: sm45452975
+
+  assets:
+    - src: README.md
+      dest: Script/{id}/README.md
+    - src: LICENSE
+      dest: Script/{id}/LICENSE
+  file_name: package.au2pkg.zip
+
+build:
+  out_dir: build
+
+scripts:
+  - name: PixelSnap_S.anm2
+    sources:
+      - path: script/au2/preamble.lua
+      - path: script/au2/main.lua
