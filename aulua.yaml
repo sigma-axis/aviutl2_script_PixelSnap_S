@@ -10,7 +10,7 @@ project:
 package:
   id: PixelSnap_S
   name: ピクセル位置合わせスクリプト PixelSnap_S
-  version: v1.10-wip
+  version: v1.10
   information: "{name} {version} by {AUTHOR}"
   script_sub_dir: ""
   uninstall_sub_folder_file: false
