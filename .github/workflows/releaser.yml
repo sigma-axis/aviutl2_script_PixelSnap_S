@@ -51,6 +51,7 @@ jobs:
   release:
     name: Create Release
     if: github.event_name == 'push' && github.ref_type == 'tag'
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
