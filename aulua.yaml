@@ -4,13 +4,13 @@ project:
     NAME: PixelSnap_S
     AUTHOR: σ軸
     PUBLISH_PAGE: https://github.com/sigma-axis/aviutl2_script_PixelSnap_S
-    LEAST_AVIUTL_VERSION: "2010900"
-    LEAST_AVIUTL_VERSION_STRING: "2.1.9"
+    LEAST_AVIUTL_VERSION: "2011000"
+    LEAST_AVIUTL_VERSION_STRING: "2.1.10"
 
 package:
   id: PixelSnap_S
   name: ピクセル位置合わせスクリプト PixelSnap_S
-  version: v1.10
+  version: v1.20-wip
   information: "{name} {version} by {AUTHOR}"
   script_sub_dir: ""
   uninstall_sub_folder_file: false

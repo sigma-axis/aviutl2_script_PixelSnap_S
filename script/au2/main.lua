@@ -11,61 +11,89 @@ local sx, sy, sz = obj.getvalue("scale");
 sx, sy, sz = obj.sx * sx, obj.sy * sy, obj.sz * sz;
 
 local rx, ry, rz = obj.getvalue("angle");
-rx, ry, rz =
-	2 * math.pi * (((obj.rx + rx) / 360) % 1),
-	2 * math.pi * (((obj.ry + ry) / 360) % 1),
-	2 * math.pi * (((obj.rz + rz) / 360) % 1);
-local c_x, s_x, c_y, s_y, c_z, s_z =
-	math.cos(rx), math.sin(rx), math.cos(ry), math.sin(ry), math.cos(rz), math.sin(rz);
+rx, ry, rz = obj.rx + rx, obj.ry + ry, obj.rz + rz;
 
-local x0, y0, z0 = obj.getvalue("pos");
-x0, y0, z0 = x0 + obj.ox, y0 + obj.oy, y0 + obj.oz;
+local x0, y0, tx0, ty0, z0 = 0, 0, obj.getvalue("pos");
+tx0, ty0, z0 = tx0 + obj.ox, ty0 + obj.oy, z0 + obj.oz;
+
+local function rot_mat(x, y, z)
+	x, y, z =
+		2 * math.pi * ((x / 360) % 1),
+		2 * math.pi * ((y / 360) % 1),
+		2 * math.pi * ((z / 360) % 1);
+	local c_x, s_x, c_y, s_y, c_z, s_z =
+		math.cos(x), math.sin(x), math.cos(y), math.sin(y), math.cos(z), math.sin(z);
+	return {
+		c_y * c_z, -c_y * s_z, s_y;
+		s_x * s_y * c_z + c_x * s_z, c_x * c_z - s_x * s_y * s_z, -s_x * c_y;
+		-c_x * s_y * c_z + s_x * s_z, s_x * c_z + c_x * s_y * s_z,  c_x * c_y;
+	};
+end
+local function mul_vec(M, x, y, z)
+	return
+		M[1] * x + M[2] * y + M[3] * z,
+		M[4] * x + M[5] * y + M[6] * z,
+		M[7] * x + M[8] * y + M[9] * z;
+end
+local function mul_mat_r(M1, M2)
+	M2[1], M2[4], M2[7] = mul_vec(M1, M2[1], M2[4], M2[7]);
+	M2[2], M2[5], M2[8] = mul_vec(M1, M2[2], M2[5], M2[8]);
+	M2[3], M2[6], M2[9] = mul_vec(M1, M2[3], M2[6], M2[9]);
+	return M2;
+end
 
 local dx, dy, dz = cx - cx0, cy - cy0, -cz0;
 dx, dy, dz = sx * dx, sy * dy, sz * dz;
-dx, dy = c_z * dx - s_z * dy, s_z * dx + c_z * dy;
-dz, dx = c_y * dz - s_y * dx, s_y * dz + c_y * dx;
-dy, dz = c_x * dy - s_x * dz, s_x * dy + c_x * dz;
+dx, dy, dz = mul_vec(rot_mat(rx, ry, rz), dx, dy, dz);
 
-local group_layer = obj.getoption("group_info");
+-- group controls.
+local group_layer, group_M, group_s = obj.getoption("group_info", 0), nil, 1;
 if group_layer > 0 then
-    -- group control up to one level.
-	sx = obj.getvalue(group_layer, "グループ制御", "拡大率") / 100;
-	rx, ry, rz =
-		2 * math.pi * ((obj.getvalue(group_layer, "グループ制御", "X軸回転") / 360) % 1),
-		2 * math.pi * ((obj.getvalue(group_layer, "グループ制御", "Y軸回転") / 360) % 1),
-		2 * math.pi * ((obj.getvalue(group_layer, "グループ制御", "Z軸回転") / 360) % 1);
-	c_x, s_x, c_y, s_y, c_z, s_z =
-		math.cos(rx), math.sin(rx), math.cos(ry), math.sin(ry), math.cos(rz), math.sin(rz);
+	group_M = { 1, 0, 0; 0, 1, 0; 0, 0, 1 };
+	for i = 1, obj.layer - 1 do
+		x0, y0 = x0 + tx0, y0 + ty0;
 
-	dx, dy, dz = sx * dx, sx * dy, sx * dz;
-	dx, dy = c_z * dx - s_z * dy, s_z * dx + c_z * dy;
-	dz, dx = c_y * dz - s_y * dx, s_y * dz + c_y * dx;
-	dy, dz = c_x * dy - s_x * dz, s_x * dy + c_x * dz;
+		local s = obj.getvalue(group_layer, "グループ制御", "拡大率") / 100;
+		dx, dy, dz = s * dx, s * dy, s * dz;
+		x0, y0, z0 = s * x0, s * y0, s * z0;
+		group_s = s * group_s;
 
-	x0, y0, z0 = sx * x0, sx * y0, sx * z0;
-	x0, y0 = c_z * x0 - s_z * y0, s_z * x0 + c_z * y0;
-	z0, x0 = c_y * z0 - s_y * x0, s_y * z0 + c_y * x0;
-	y0, z0 = c_x * y0 - s_x * z0, s_x * y0 + c_x * z0;
+		local N = rot_mat(
+			obj.getvalue(group_layer, "グループ制御", "X軸回転"),
+			obj.getvalue(group_layer, "グループ制御", "Y軸回転"),
+			obj.getvalue(group_layer, "グループ制御", "Z軸回転"));
+		dx, dy, dz = mul_vec(N, dx, dy, dz);
+		x0, y0, z0 = mul_vec(N, x0, y0, z0);
+		mul_mat_r(N, group_M);
 
-	x0, y0, z0 =
-		x0 + obj.getvalue(group_layer, "グループ制御", "X"),
-		y0 + obj.getvalue(group_layer, "グループ制御", "Y"),
-		z0 + obj.getvalue(group_layer, "グループ制御", "Z");
+		tx0, ty0, z0 =
+			obj.getvalue(group_layer, "グループ制御", "X"),
+			obj.getvalue(group_layer, "グループ制御", "Y"),
+			z0 + obj.getvalue(group_layer, "グループ制御", "Z");
+
+		group_layer = obj.getoption("group_info", i);
+		if group_layer <= 0 then break end
+	end
 end
 
-x0, y0 = x0 + obj.screen_w / 2, y0 + obj.screen_h / 2;
-local x, y, frac = x0 + dx, y0 + dy, cx % 1;
+tx0, ty0 = tx0 + obj.screen_w / 2, ty0 + obj.screen_h / 2;
+local pz = 1 + (z0 + dz) / 1024;
+local x, y, frac =
+	tx0 + (x0 + dx) / pz,
+	ty0 + (y0 + dy) / pz, cx % 1;
 x, y =
 	math.floor(0.5 + x - frac) + frac,
 	math.floor(0.5 + y - frac) + frac;
-dx, dy, dz = x - x0, y - y0, 0;
-if group_layer > 0 then
-    -- apply the inverse transform of the group control.
-	dy, dz = c_x * dy + s_x * dz, -s_x * dy + c_x * dz;
-	dz, dx = c_y * dz + s_y * dx, -s_y * dz + c_y * dx;
-	dx, dy = c_z * dx + s_z * dy, -s_z * dx + c_z * dy;
-	dx, dy, dz = dx / sx, dy / sx, dz / sx;
+dx, dy, dz = x - tx0, y - ty0, 0;
+if group_M ~= nil then
+	-- apply the inverse transform of the group control.
+	dx, dy = dx * pz - x0, dy * pz - y0;
+	dx, dy, dz = mul_vec({
+		group_M[1], group_M[4], group_M[7];
+		group_M[2], group_M[5], group_M[8];
+		group_M[3], group_M[6], group_M[9];
+	}, dx, dy, dz);
+	dx, dy, dz = dx / group_s, dy / group_s, dz / group_s;
 end
 obj.ox, obj.oy, obj.oz = obj.ox + dx, obj.oy + dy, obj.oz + dz;
 obj.cx, obj.cy = obj.cx + (cx - cx0), obj.cy + (cy - cy0);
