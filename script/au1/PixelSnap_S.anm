@@ -41,29 +41,42 @@ local sx, sy, sz =
 	zoom * math.min(1 - obj.aspect, 1) * math.min(1 - aspect, 1),
 	zoom * math.min(1 + obj.aspect, 1) * math.min(1 + aspect, 1),
 	zoom;
-
-local rx, ry, rz =
-	2 * math.pi * ((obj.rx / 360) % 1),
-	2 * math.pi * ((obj.ry / 360) % 1),
-	2 * math.pi * ((obj.rz / 360) % 1);
-local c_x, s_x, c_y, s_y, c_z, s_z =
-	math.cos(rx), math.sin(rx), math.cos(ry), math.sin(ry), math.cos(rz), math.sin(rz);
-
-local x0, y0 =
+local rx, ry, rz = obj.rx, obj.ry, obj.rz;
+local tx0, ty0, z0 =
 	obj.getvalue("x") + obj.ox,
-	obj.getvalue("y") + obj.oy;
+	obj.getvalue("y") + obj.oy,
+	obj.getvalue("z") + obj.oz;
+
+local function rot_mat(x, y, z)
+	x, y, z =
+		2 * math.pi * ((x / 360) % 1),
+		2 * math.pi * ((y / 360) % 1),
+		2 * math.pi * ((z / 360) % 1);
+	local c_x, s_x, c_y, s_y, c_z, s_z =
+		math.cos(x), math.sin(x), math.cos(y), math.sin(y), math.cos(z), math.sin(z);
+	return {
+		c_y * c_z, -c_y * s_z, s_y;
+		s_x * s_y * c_z + c_x * s_z, c_x * c_z - s_x * s_y * s_z, -s_x * c_y;
+		-c_x * s_y * c_z + s_x * s_z, s_x * c_z + c_x * s_y * s_z,  c_x * c_y;
+	};
+end
+local function mul_vec(M, x, y, z)
+	return
+		M[1] * x + M[2] * y + M[3] * z,
+		M[4] * x + M[5] * y + M[6] * z,
+		M[7] * x + M[8] * y + M[9] * z;
+end
 
 local dx, dy, dz = cx - cx0, cy - cy0, -cz0;
 dx, dy, dz = dx * sx, dy * sy, dz * sz;
-dx, dy = c_z * dx - s_z * dy, s_z * dx + c_z * dy;
-dz, dx = c_y * dz - s_y * dx, s_y * dz + c_y * dx;
-dy, dz = c_x * dy - s_x * dz, s_x * dy + c_x * dz;
+dx, dy, dz = mul_vec(rot_mat(rx, ry, rz), dx, dy, dz);
 
-x0, y0 = x0 + obj.screen_w / 2, y0 + obj.screen_h / 2;
-local x, y, frac = x0 + dx, y0 + dy, cx % 1;
+tx0, ty0 = tx0 + obj.screen_w / 2, ty0 + obj.screen_h / 2;
+local pz = 1 + (z0 + dz) / 1024;
+local x, y, frac = tx0 + dx / pz, ty0 + dy / pz, cx % 1;
 x, y =
 	math.floor(0.5 + x - frac) + frac,
 	math.floor(0.5 + y - frac) + frac;
-dx, dy, dz = x - x0, y - y0, 0;
+dx, dy, dz = x - tx0, y - ty0, 0;
 obj.ox, obj.oy, obj.oz = obj.ox + dx, obj.oy + dy, obj.oz + dz;
 obj.cx, obj.cy = obj.cx + (cx - cx0), obj.cy + (cy - cy0);
