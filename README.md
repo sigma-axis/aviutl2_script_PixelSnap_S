@@ -68,7 +68,7 @@
 
     ```lua
     --
-    -- VERSION: v1.05
+    -- VERSION: v1.10
     --
     ```
 
