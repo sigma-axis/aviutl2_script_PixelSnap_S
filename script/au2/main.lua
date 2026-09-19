@@ -53,23 +53,23 @@ if group_layer > 0 then
 	for i = 1, obj.layer - 1 do
 		x0, y0 = x0 + tx0, y0 + ty0;
 
-		local s = obj.getvalue(group_layer, "グループ制御", "拡大率") / 100;
+		local s = (obj.getvalue(group_layer, "グループ制御", "拡大率") or 100) / 100;
 		dx, dy, dz = s * dx, s * dy, s * dz;
 		x0, y0, z0 = s * x0, s * y0, s * z0;
 		group_s = s * group_s;
 
 		local N = rot_mat(
-			obj.getvalue(group_layer, "グループ制御", "X軸回転"),
-			obj.getvalue(group_layer, "グループ制御", "Y軸回転"),
-			obj.getvalue(group_layer, "グループ制御", "Z軸回転"));
+			obj.getvalue(group_layer, "グループ制御", "X軸回転") or 0,
+			obj.getvalue(group_layer, "グループ制御", "Y軸回転") or 0,
+			obj.getvalue(group_layer, "グループ制御", "Z軸回転") or 0);
 		dx, dy, dz = mul_vec(N, dx, dy, dz);
 		x0, y0, z0 = mul_vec(N, x0, y0, z0);
 		mul_mat_r(N, group_M);
 
 		tx0, ty0, z0 =
-			obj.getvalue(group_layer, "グループ制御", "X"),
-			obj.getvalue(group_layer, "グループ制御", "Y"),
-			z0 + obj.getvalue(group_layer, "グループ制御", "Z");
+			obj.getvalue(group_layer, "グループ制御", "X") or 0,
+			obj.getvalue(group_layer, "グループ制御", "Y") or 0,
+			z0 + (obj.getvalue(group_layer, "グループ制御", "Z") or 0);
 
 		group_layer = obj.getoption("group_info", i);
 		if group_layer <= 0 then break end
